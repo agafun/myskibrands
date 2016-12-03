@@ -12,8 +12,23 @@ consumer_key = os.environ['CONSUMER_KEY']
 consumer_secret = os.environ['CONSUMER_SECRET']
 
 
-#This is a basic listener that just prints received tweets to stdout.
 class StdOutListener(StreamListener):
+
+    def tweet_is_valid(self, text):
+        sensitive_words = ['atomic', 'blizzard', 'dynastar', 'elan', 'fischer', 'head', 'k2', 'nordica', 'salomon']
+        ski_words = [' ski ', ' skis ', ' skiing ', 'skier', 'snow', 'powder', 'slope']
+
+        for word in sensitive_words:
+            if word in text.lower():
+                for ski_word in ski_words:
+                    if ski_word in text.lower():
+                        #print 'Tweet is valid ', text
+                        return True
+                #print 'Tweet is not valid ', text
+                return False
+        #print 'No sensitive words in Tweet ', text
+        return True
+
 
     def on_data(self, data):
         try:
@@ -39,27 +54,29 @@ class StdOutListener(StreamListener):
             entities_hashtags = entities['hashtags']
             entities_user_mentions = entities['user_mentions']
 
-            t = None
-            u = User.create_or_get(id=user_id, screen_name=user_screen_name, location=user_location, followers_count=user_followers_count, friends_count=user_friends_count, favourites_count=user_favourites_count, statuses_count=user_statuses_count, utc_offset=user_utc_offset)
-            place = ''
-            if isinstance(tweet_place, dict):
-                place = tweet_place['name']
-            try:
-                t = Tweet.create(id=tweet_id, user=u[0], text=tweet_text, favorite_count=tweet_favorite_count, lang=tweet_lang, place=place, timestamp_ms=tweet_timestamp_ms)
-            except:
-                pass
 
-            try:
-                for h in entities_hashtags:
-                    Hashtag.create(hashtag=h['text'], tweet=t)
-            except:
-                pass
+            if self.tweet_is_valid(tweet_text):
+                t = None
+                u = User.create_or_get(id=user_id, screen_name=user_screen_name, location=user_location, followers_count=user_followers_count, friends_count=user_friends_count, favourites_count=user_favourites_count, statuses_count=user_statuses_count, utc_offset=user_utc_offset)
+                place = ''
+                if isinstance(tweet_place, dict):
+                    place = tweet_place['name']
+                try:
+                    t = Tweet.create(id=tweet_id, user=u[0], text=tweet_text, favorite_count=tweet_favorite_count, lang=tweet_lang, place=place, timestamp_ms=tweet_timestamp_ms)
+                except:
+                    pass
 
-            try:
-                for um in entities_user_mentions:
-                    UserMention.create(screen_name=um['screen_name'], tweet=t)
-            except:
-                pass
+                try:
+                    for h in entities_hashtags:
+                        Hashtag.create(hashtag=h['text'], tweet=t)
+                except:
+                    pass
+
+                try:
+                    for um in entities_user_mentions:
+                        UserMention.create(screen_name=um['screen_name'], tweet=t)
+                except:
+                    pass
 
             return True
         except KeyError as e:
@@ -78,4 +95,4 @@ if __name__ == '__main__':
     stream = Stream(auth, l)
 
     #This line filter Twitter Streams to capture data by the keywords
-    stream.filter(track=['atomicski', 'atomicskis', 'atomic_ski', 'atomic_skis', 'weareskiing', 'blizzard', 'blizzardski', 'blizzardskis', 'blizzard_ski', 'blizzard_skis', 'dynastar', 'dynastarski', 'dynastarskis', 'dynastar_ski', 'dynastar_skis', 'weliveskiing', 'elan', 'elanski', 'elanskis', 'elan_ski', 'elan_skis', 'elanskisales', 'fischer', 'fischerski', 'fischerskis', 'fischer_ski', 'fischer_skis', 'headski', 'headskis', 'head_ski', 'head_skis', 'headrebels', 'worldcuprebels', 'headwhatsyourlimit', 'k2ski', 'k2skis', 'k2_ski', 'k2_skis', 'k2skisuk', 'seriousfun', 'kaestle', 'kaestleski', 'kaestleskis', 'kaestle_ski', 'kaestle_skis', 'forskiers', 'kneissl', 'kneisslski', 'kneisslskis', 'kneissl_ski', 'kneissl_skis', 'kneissl_uk', 'nordica', 'nordicaski', 'nordicaskis', 'nordica_ski', 'nordica_skis', 'nordicausa', 'fitforthelongrun', 'rossignol', 'rossignolski', 'rossignolskis', 'rossignol_ski', 'rossignol_skis', 'rossignol_1907', 'anotherbestday', 'salomon', 'salomonski', 'salomonskis', 'salomon_ski', 'salomon_skis', 'salomonsports', 'timetoplay', 'salomontv', 'salomonnordic', 'stoeckli', 'stoeckliski', 'stoeckliskis', 'stoeckli_ski', 'stoeckli_skis', 'stoeckliracing', 'voelkl', 'voelklski', 'voelklskis', 'voelkl_ski', 'voelkl_skis', 'volklski', 'volklskis', 'volkl_ski', 'volkl_skis', 'simplyvolkl'])
+    stream.filter(track=['atomicski', 'atomicskis', 'atomic_ski', 'atomic_skis', 'weareskiing', 'blizzardski', 'blizzardskis', 'blizzard_ski', 'blizzard_skis', 'dynastarski', 'dynastarskis', 'dynastar_ski', 'dynastar_skis', 'weliveskiing', 'elanski', 'elanskis', 'elan_ski', 'elan_skis', 'elanskisales', 'fischerski', 'fischerskis', 'fischer_ski', 'fischer_skis', 'headski', 'headskis', 'head_ski', 'head_skis', 'headrebels', 'worldcuprebels', 'headwhatsyourlimit', 'k2ski', 'k2skis', 'k2_ski', 'k2_skis', 'k2skisuk', 'seriousfun', 'kaestle', 'kaestleski', 'kaestleskis', 'kaestle_ski', 'kaestle_skis', 'forskiers', 'kneissl', 'kneisslski', 'kneisslskis', 'kneissl_ski', 'kneissl_skis', 'kneissl_uk', 'nordicaski', 'nordicaskis', 'nordica_ski', 'nordica_skis', 'nordicausa', 'fitforthelongrun', 'rossignol', 'rossignolski', 'rossignolskis', 'rossignol_ski', 'rossignol_skis', 'rossignol_1907', 'anotherbestday', 'salomonski', 'salomonskis', 'salomon_ski', 'salomon_skis', 'salomonsports', 'timetoplay', 'salomontv', 'salomonnordic', 'stoeckli', 'stoeckliski', 'stoeckliskis', 'stoeckli_ski', 'stoeckli_skis', 'stoeckliracing', 'voelkl', 'voelklski', 'voelklskis', 'voelkl_ski', 'voelkl_skis', 'volklski', 'volklskis', 'volkl_ski', 'volkl_skis', 'simplyvolkl', 'atomic', 'blizzard', 'dynastar', 'elan', 'fischer', 'head', 'k2', 'nordica', 'salomon'])

@@ -34,6 +34,5 @@ class UserMention(BaseModel):
     screen_name = CharField()
     tweet = ForeignKeyField(Tweet, related_name='user_mentions')
 
-
 db.connect()
 db.create_tables([User, Tweet, Hashtag, UserMention], safe=True)
