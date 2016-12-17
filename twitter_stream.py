@@ -28,7 +28,7 @@ class StdOutListener(StreamListener):
         return False
 
     def tweet_is_valid(self, text):
-        ski_words = ['ski', 'skis', 'skiing']
+        ski_words = ['ski', 'skis', 'skiing', 'skier', 'skiers', 'winter', 'snow', 'snowboard', 'slope']
 
         tweet1 = text.lower()
         tweet1 = self.remove_characters(tweet1, "!$%^&*_-+={}[]|:;<,>.?/")
