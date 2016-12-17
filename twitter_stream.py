@@ -14,21 +14,25 @@ consumer_secret = os.environ['CONSUMER_SECRET']
 
 class StdOutListener(StreamListener):
 
+    def remove_characters(self, s, characters):
+        result = s
+        for character in characters:
+            result = result.replace(character, '')
+        return result
+
+    def tweet_contains_words(self, tweet, words):
+        tweeli = list(tweet.split())
+        for item in words:
+            if item in tweeli:
+                return True
+        return False
+
     def tweet_is_valid(self, text):
-        sensitive_words = ['atomic', 'blizzard', 'dynastar', 'elan', 'fischer', 'head', 'k2', 'nordica', 'salomon']
-        ski_words = [' ski ', ' skis ', ' skiing ', 'skier', 'snow', 'powder', 'slope']
+        ski_words = ['ski', 'skis', 'skiing']
 
-        for word in sensitive_words:
-            if word in text.lower():
-                for ski_word in ski_words:
-                    if ski_word in text.lower():
-                        #print 'Tweet is valid ', text
-                        return True
-                #print 'Tweet is not valid ', text
-                return False
-        #print 'No sensitive words in Tweet ', text
-        return True
-
+        tweet1 = text.lower()
+        tweet1 = self.remove_characters(tweet1, "!$%^&*_-+={}[]|:;<,>.?/")
+        return self.tweet_contains_words(tweet1, ski_words)
 
     def on_data(self, data):
         try:
