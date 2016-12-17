@@ -25,6 +25,7 @@ class Tweet(BaseModel):
     lang = CharField()
     place = CharField(null=True)
     timestamp_ms = TimestampField()
+    created_at = TextField()
 
 class Hashtag(BaseModel):
     hashtag = CharField()
