@@ -17,7 +17,7 @@ class StdOutListener(StreamListener):
     def remove_characters(self, s, characters):
         result = s
         for character in characters:
-            result = result.replace(character, '')
+            result = result.replace(character, ' ')
         return result
 
     def tweet_contains_words(self, tweet, words):
@@ -31,7 +31,7 @@ class StdOutListener(StreamListener):
         ski_words = ['ski', 'skis', 'skiing', 'skier', 'skiers', 'winter', 'snow', 'snowboard', 'slope']
 
         tweet1 = text.lower()
-        tweet1 = self.remove_characters(tweet1, "!$%^&*_-+={}[]|:;<,>.?/")
+        tweet1 = self.remove_characters(tweet1, "!$%^&*_-+={}[]|:;<,>.?/'\"\\")
         return self.tweet_contains_words(tweet1, ski_words)
 
     def on_data(self, data):
