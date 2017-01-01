@@ -27,6 +27,10 @@ class Tweet(BaseModel):
     timestamp_ms = TimestampField()
     created_at = TextField()
 
+class TweetOriginal(BaseModel):
+    tweet = ForeignKeyField(Tweet, related_name='tweetorigin')
+    tweet_json = CharField()
+    
 class Hashtag(BaseModel):
     hashtag = CharField()
     tweet = ForeignKeyField(Tweet, related_name='hashtags')

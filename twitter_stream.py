@@ -68,6 +68,7 @@ class StdOutListener(StreamListener):
                     place = tweet_place['name']
                 try:
                     t = Tweet.create(id=tweet_id, user=u[0], text=tweet_text, favorite_count=tweet_favorite_count, lang=tweet_lang, place=place, timestamp_ms=tweet_timestamp_ms, created_at=tweet_created_at)
+                    TweetOriginal.create(tweet=t, tweet_json=data)
                 except:
                     pass
 
