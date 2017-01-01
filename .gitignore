@@ -1,3 +1,5 @@
 .idea
 *.pyc
 *.db
+comm1
+tweets_big1.csv
