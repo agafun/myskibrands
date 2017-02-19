@@ -1,0 +1,1 @@
+create table test (id bigint, user_id bigint, text text, favorite_count integer, lang varchar(255), place varchar(255), timestamp_ms integer, brand varchar(255), location varchar(255), followers_count integer, utc_offset integer);
